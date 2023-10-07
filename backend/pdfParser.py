@@ -1,6 +1,6 @@
 from langchain.document_loaders import PyPDFLoader
 
-def parse(pdfFilePaths):
+def pdfParse(pdfFilePaths):
     loaders = [PyPDFLoader(filePath) for filePath in pdfFilePaths]
     documents = [loader.load_and_split() for loader in loaders]
 
