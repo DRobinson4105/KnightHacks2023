@@ -9,18 +9,18 @@ from pdfParser import pdfParse
 from responseParser import parse
 from langchain.cache import InMemoryCache
 import langchain
-langchain.llm_cache = InMemoryCache()
+from flask import Flask, request
 
+# Setup
+app = Flask(__name__)
+langchain.llm_cache = InMemoryCache()
 load_dotenv()
 
-topic = "biology"
-pdfs = ["./notes1.pdf", "./notes2.pdf"]
-
-# Set up text to be stored in vector database
-textSplitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-textSplit = textSplitter.split_text(pdfParse(pdfs))
-
-def generatePracticeQuestion(topic, notes, prevQuestions):
+@app.route("/api/files", methods=["POST"])
+def generatePracticeQuestion():
+    topic = request.json["topic"]
+    notes = request.files["notes"]
+    prevQuestions = request.json["prevQuestions"]
     textSplitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     textSplit = textSplitter.split_text(notes)
     vectorStore = Chroma.from_texts(textSplit, OpenAIEmbeddings())
@@ -43,9 +43,9 @@ def generatePracticeQuestion(topic, notes, prevQuestions):
     Answer: (answer choice)
 
     Don't use any of these questions:
-    {'\n'.join(prevQuestions)}
     """
+    
+    for question in prevQuestions:
+        query += question + "\n"
         
     return questionAnswer.run(query)
-
-print(generatePracticeQuestion(topic, pdfParse(pdfs), []))
