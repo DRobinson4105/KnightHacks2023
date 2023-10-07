@@ -2,48 +2,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ThemeToggle";
-import axios from "axios";
+import { sendHi, sendHiName, sendFormData } from "@/lib/actions";
 
 export default function Home() {
-	const sendHi = async () => {
-		"use server";
-		try {
-			const res = await axios.get("http://127.0.0.1:5328/api/hello");
-			console.log(res.data);
-		} catch (err) {
-			console.log("bad");
-		}
-	};
-
-	const sendHiName = async () => {
-		"use server";
-		try {
-			const name = "David"; // Replace with the actual name
-			const res = await axios.post("http://127.0.0.1:5328/api/name", { name });
-			console.log(res.data);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	const sendFormData = async (data: FormData) => {
-		"use server";
-		// console.log(data.has("name"));
-		// const name = data.get("name");
-		const file = data.get("file");
-		console.log(file);
-		try {
-			const res = await axios.post("http://127.0.0.1:5328/api/action", file, {
-				headers: {
-					"Content-Type": "application/pdf",
-				},
-			});
-			console.log(res.data);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
 	return (
 		<main className="">
 			<ModeToggle />
