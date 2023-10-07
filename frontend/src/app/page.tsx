@@ -29,7 +29,7 @@ export default function Home() {
 					<Input id="picture" type="file" />
 					<Button type="submit">Send</Button>
 				</form>
-				<form action={sendFormData} encType="multipart/form-data">
+				<form action={sendFormData}>
 					<h1>Get PDF Form THINGY</h1>
 					<Input name="name" type="text" required />
 					<Label htmlFor="class">Class</Label>

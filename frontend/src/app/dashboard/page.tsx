@@ -1,24 +1,13 @@
-"use client";
-
 import React from "react";
-import { UserButton, useUser } from "@clerk/nextjs";
-import { useAuth } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
-const Page = () => {
-	const { isLoaded, user, isSignedIn } = useUser();
-	if (!isLoaded) {
-		return <div>Loading...</div>;
-	}
-	if (!isSignedIn) {
-		return <div>Access denied</div>;
-	}
-
+const page = () => {
 	return (
-		<div className="flex flex-col">
+		<div>
 			<UserButton afterSignOutUrl="/" />
-			<div>This is the dashboard for {user.firstName}</div>
+			<h1>Page</h1>
 		</div>
 	);
 };
 
-export default Page;
+export default page;
