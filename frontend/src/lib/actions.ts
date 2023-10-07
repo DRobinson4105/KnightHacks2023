@@ -24,19 +24,11 @@ export const sendHiName = async () => {
 };
 
 export const sendFormData = async (data: FormData) => {
-	// console.log(data.has("name"));
-	// const name = data.get("name");
 	const file = data.get("file");
 	if (!file) return;
-	console.log(data);
-	const fileData = new File([file], "test.pdf", { type: "application/pdf" });
 
 	try {
-		const res = await axios.post("http://127.0.0.1:5328/api/action", fileData, {
-			headers: {
-				"Content-Type": "application/pdf",
-			},
-		});
+		const res = await axios.post("http://127.0.0.1:5328/api/action", data);
 		console.log(res.data);
 	} catch (err) {
 		console.log(err);

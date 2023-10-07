@@ -1,13 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ThemeToggle";
 import { sendHi, sendHiName, sendFormData } from "@/lib/actions";
+import Link from "next/link";
 
 export default function Home() {
 	return (
 		<main className="">
-			<ModeToggle />
+			<div className="flex">
+				<Link href="/sign-up">
+					<Button>Register</Button>
+				</Link>
+				<Link href="/sign-in">
+					<Button>Sign in</Button>
+				</Link>
+			</div>
+
 			<div className="grid w-full max-w-sm items-center gap-1.5">
 				<form action={sendHi}>
 					<h1>Hello World! Form</h1>
