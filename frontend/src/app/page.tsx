@@ -1,52 +1,20 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ThemeToggle";
-import axios from "axios";
+import { sendHi, sendHiName, sendFormData } from "@/lib/actions";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Features from "@/components/Features";
+import Footer from "@/components/Footer";
 
 export default function Home() {
-	const sendHi = async () => {
-		"use server";
-		try {
-			const res = await axios.get("http://127.0.0.1:5328/api/hello");
-			console.log(res.data);
-		} catch (err) {
-			console.log("bad");
-		}
-	};
-
-	const sendHiName = async () => {
-		"use server";
-		try {
-			const name = "David"; // Replace with the actual name
-			const res = await axios.post("http://127.0.0.1:5328/api/name", { name });
-			console.log(res.data);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	const sendFormData = async (data: FormData) => {
-		"use server";
-		// console.log(data.has("name"));
-		// const name = data.get("name");
-		const file = data.get("file");
-		console.log(file);
-		try {
-			const res = await axios.post("http://127.0.0.1:5328/api/action", file, {
-				headers: {
-					"Content-Type": "application/pdf",
-				},
-			});
-			console.log(res.data);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
 	return (
-		<main className="">
-			<ModeToggle />
+		<main className="min-w-screen min-h-screen bg-white">
+			<Navbar />
+			<Hero />
+			<Features />
+			<Footer />
 			<div className="grid w-full max-w-sm items-center gap-1.5">
 				<form action={sendHi}>
 					<h1>Hello World! Form</h1>
@@ -60,7 +28,7 @@ export default function Home() {
 					<Input id="picture" type="file" />
 					<Button type="submit">Send</Button>
 				</form>
-				<form action={sendFormData} encType="multipart/form-data">
+				<form action={sendFormData}>
 					<h1>Get PDF Form THINGY</h1>
 					<Input name="name" type="text" required />
 					<Label htmlFor="class">Class</Label>
