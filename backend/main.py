@@ -71,3 +71,6 @@ def generateQuestion():
         query += question + "\n"
         
     return generator.run(prompt)
+
+if __name__ == "__main__":
+    app.run(port=5328)
