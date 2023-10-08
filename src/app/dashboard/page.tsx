@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-
 import { AiFillFileText } from "react-icons/ai";
 import axios from "axios";
 import { UserButton } from "@clerk/nextjs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Int32 } from "mongodb";
 
 const parse = (data: String) => {
 	try {
@@ -42,8 +42,13 @@ const parse = (data: String) => {
 }
 	
 const Page = () => {
+	const [sight, setSight] = useState(false)
+	const [questionsLoaded, setQuestionsLoaded] = useState(false)
+	const [correct, setCorrect] = useState(false)
+	const [isloading, setIsLoading] = useState(false)
 	const [question, setQuestion] = useState("");
 	const [answers, setAnswers] = useState<String[]>();
+	const [answerChoice, setAnswerChoice] = useState(0);
 	const [correctAnswer, setCorrectAnswer] = useState(0);
 	const [prevQuestions, setPrevQuestions] = useState("");
 	const [topic, setTopic] = useState("");
@@ -58,6 +63,8 @@ const Page = () => {
 	};
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		setIsLoading(true)
+		setCorrect(false)
 		event.preventDefault();
 
 		let formData = new FormData();
@@ -89,10 +96,27 @@ const Page = () => {
 			setPrevQuestions(prevQuestions + "\n" + question["question"])
 			setAnswers(question["answers"])
 			setCorrectAnswer(question["correctAnswer"])
+			setQuestionsLoaded(true)
+			setIsLoading(false)
+
 		} catch (err) {
 			console.log(err);
 		}
 	};
+	const answerEval = () => {
+		try {
+			if(answerChoice === correctAnswer){
+				setCorrect(true)
+			}
+		} catch(err){
+			console.log("That is not a valid answer choice.")
+		}
+
+	}
+
+	const buttonClick = () => {
+		setSight(true)
+	}
 
 	return (
 		<div>
@@ -125,15 +149,51 @@ const Page = () => {
 							onChange={(e) => onChange(e)}
 						/>
 						<Button type="submit">Submit</Button>
+						
 					</div>
 				</form>
 			</div>
-
-			<h1>{question}</h1>
-			{answers && answers.map(
-				(answer, index) => <h1 key={index}>{answer}</h1>
-			)}
-		</div>
+			{isloading && <div>Loading...</div>}
+			{!isloading &&(
+			<div className="Question flex flex-col justify-center">
+			{question}
+			<form>
+				{answers && answers.map(
+				(answer, index) => 
+					<div className="Answer_Choices">
+					<input 
+					key={index} 
+					type="radio"
+					checked={answerChoice === index}
+					onChange={() => setAnswerChoice(index)}
+					/>{answer}
+					</div>
+				)}
+				</form>
+				<div className="flex">
+				<Button onClick={answerEval}>Submit</Button>{correct &&(
+							<h1>Correct</h1>
+						)
+						}
+				</div>
+				{questionsLoaded &&(
+				<form onSubmit={handleSubmit}>
+					<div className="flex flex-row space-between">
+					
+						
+						<Button 
+						type='submit'
+						>
+						Next
+						</Button>
+					</div>
+					</form>
+					
+					)}
+					
+			</div>)
+			}
+			</div>
 	);
 };
 
