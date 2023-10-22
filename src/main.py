@@ -1,14 +1,15 @@
+import langchain
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-from dotenv import load_dotenv
 from langchain.cache import InMemoryCache
-import langchain
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import PyPDF2
+import os
 
 # init
 app = Flask(__name__)
@@ -30,19 +31,19 @@ def generateQuestion():
                     jsonify({"error": "Invalid file format. Please upload a PDF file."}),
                     400,
                 )
-            
+
             pdf_reader = PyPDF2.PdfReader(file)
-            
+
             # extract text from each page of pdf
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text() + ' '
 
             notes += text + ' '
+
     except Exception as e:
         return jsonify({"error": "Error parsing PDF"}), 500
-    
-    
+
     # split text into chunks and store in vector db
     textSplitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     textSplit = textSplitter.split_text(notes)
@@ -71,6 +72,5 @@ def generateQuestion():
     """
     return generator.run(prompt)
 
-
 if __name__ == "__main__":
-    app.run(port=5328)
+    app.run(port=os.environ["port"])
