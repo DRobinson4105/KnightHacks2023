@@ -10,6 +10,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import PyPDF2
 import os
+from waitress import serve
 
 # init
 app = Flask(__name__)
@@ -57,20 +58,31 @@ def generateQuestion():
     )
 
     prompt = f"""
-    Only using the context provided, give me 1 practice question
-    that review the content in the context related to the topic, {topic}, with four possible answers 
-    and only one of them is correct. Use the format,
+    Only using the context provided, give me 1 descriptive practice question that reviews the content in the
+    context related to the topic, {topic}, with four descriptive possible answers and only one of them is
+    correct and don't let any of the other answer choices be true. The wrong answer choices should be similar to the correct answer choice while still being wrongDescriptively explain why each wrong answer choice is wrong and don't include any periods at the
+    end of the sentences (If the answer is correct, just say "Correct"). Don't include new lines
+    between answer choices. Don't include any periods at the end of any sentence, including all of
+    the explanations for why an answer is incorrect. Strictly follow the format,
     Question: (question)
     A. (answer1)
+    Incorrect because
     B. (answer2)
+    Incorrect because
     C. (answer3)
+    Incorrect because
     D. (answer4)
+    Incorrect because
     Answer: (answer choice)
 
     Don't use any of these questions:
     {prevQuestions}
     """
-    return generator.run(prompt)
+
+    res = generator.run(prompt)
+    print(res)
+    return res
 
 if __name__ == "__main__":
-    app.run(port=os.environ["port"])
+    serve(app, host="127.0.0.1", port=os.environ["FLASK_PORT"])
+    
