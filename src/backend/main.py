@@ -52,7 +52,7 @@ def generateQuestion():
 
     # setup stuff chain to generate questions
     generator = RetrievalQA.from_chain_type(
-        llm=ChatOpenAI(temperature=0, model_name="gpt-4"),
+        llm=ChatOpenAI(temperature=0, model_name="gpt-4-1106-preview"),
         chain_type="stuff",
         retriever=vectorStore.as_retriever(search_kwargs={"k": 1})
     )
@@ -80,7 +80,6 @@ def generateQuestion():
     """
 
     res = generator.run(prompt)
-    print(res)
     return res
 
 if __name__ == "__main__":

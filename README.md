@@ -7,8 +7,9 @@ git clone https://github.com/DRobinson4105/TestifAI.git
 cd TestifAI
 pnpm install
 python -m venv .venv
-.venv/Scripts/activate
-pip install -r src/requirements.txt
+.venv/Scripts/activate (on Windows)
+source .venv/bin/activate (on Mac)
+pip install -r src/backend/requirements.txt
 ```
 
 ## Configuration
@@ -26,22 +27,14 @@ NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 
-port=port_number
+FLASK_PORT=port_number
 ```
 
-## Usage
-After installing TestifAI, you can run the production server with the following commands:
-
-### Front-end Server
-```bash
-pnpm build
-pnpm start
-```
-### Back-end Server
-Make sure that the python virtual environment is running by executing the script (```.venv/Scripts/activate```)
+## Running the Production Server
+Make sure the python virtual environment is running by executing the script (```.venv/Scripts/activate```) on Windows or <br>(```source .venv/bin/activate```) on Mac
 
 ```bash
-python src/main.py
+pnpm build && pnpm start & python src/backend/main.py
 ```
 
 ## Contributions
